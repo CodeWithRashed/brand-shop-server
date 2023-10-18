@@ -1,19 +1,18 @@
-import express from 'express'
-import cors from 'cors'
+import express from "express";
+import cors from "cors";
 //Env Config
-import 'dotenv/config'
+import "dotenv/config";
 
 //Database Dependency
-import { MongoClient, ServerApiVersion } from 'mongodb';
-const app = express()
+import { MongoClient, ServerApiVersion } from "mongodb";
+const app = express();
 
 //Middlewares
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
 //Server Port
-const port = process.env.PORT || 3000
-
+const port = process.env.PORT || 3000;
 
 //Database Connection
 //URI
@@ -25,9 +24,8 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
-
 
 //Database Connect Function
 async function run() {
@@ -36,34 +34,42 @@ async function run() {
     await client.connect();
 
     //Connect To Cluster Database
-    const brandShopDB = client.db("brandShop")
-    const brandShopUserCollection = brandShopDB.collection("users")
+    const brandShopDB = client.db("brandShop");
+    //User Collection
+    const brandShopUserCollection = brandShopDB.collection("users");
+    //Products Collection
+    const productCollection = brandShopDB.collection("shopProducts");
 
-    app.post("/addUser", async(req, res) => {
+    app.post("/api/addUser", async (req, res) => {
       const data = req.body;
-      console.log(data)
+      console.log(data);
       const result = await brandShopUserCollection.insertOne(data);
-      res.send(result)
-    })
+      res.send(result);
+    });
 
-
+    //Sending Product Data to Database
+    app.post("/api/addProduct", async (req, res) => {
+      const productData = req.body;
+      console.log(productData);
+      const result = await productCollection.insertOne(productData);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
-   
   }
 }
 run().catch(console.dir);
 
-app.get('/', (req, res) => {
-  res.send('Hello From Express!')
-})
-
-
+app.get("/", (req, res) => {
+  res.send("Hello From Express!");
+});
 
 //Server Starting Script
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
