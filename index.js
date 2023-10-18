@@ -4,7 +4,7 @@ import cors from "cors";
 import "dotenv/config";
 
 //Database Dependency
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 const app = express();
 
 //Middlewares
@@ -55,16 +55,20 @@ async function run() {
       res.send(result);
     });
 
-//getting product data form database
-app.get("/api/getProduct", async(req, res)=>{
-  const cursor = productCollection.find()
-  const result = await cursor.toArray()
-  res.send(result)
-})
+    //getting products data form database
+    app.get("/api/getProduct", async (req, res) => {
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
-
-
-
+    //getting single product data form database
+    app.get("/api/getProduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
