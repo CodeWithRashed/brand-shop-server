@@ -1,18 +1,19 @@
 import express from "express";
+const app = express();
 import cors from "cors";
 //Env Config
 import "dotenv/config";
 
+
 //Database Dependency
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
-const app = express();
+const port = process.env.PORT || 3000;
 
 //Middlewares
 app.use(cors());
 app.use(express.json());
 
 //Server Port
-const port = process.env.PORT || 3000;
 
 //Database Connection
 //URI
@@ -31,7 +32,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+   
 
     //Connect To Cluster Database
     const brandShopDB = client.db("brandShop");
@@ -122,7 +123,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
