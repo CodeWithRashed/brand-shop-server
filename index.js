@@ -80,23 +80,46 @@ async function run() {
       res.send(result);
     });
 
-  //sending cart product to user
+    //sending cart product to user
     app.get("/api/getCartItems", async (req, res) => {
       const cursor = cartCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
 
+    //delete cart product to user
+    app.delete("/api/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { id: id };
+      const result = await cartCollection.deleteOne(query);
+      res.send(result);
+      console.log(id);
+    });
 
-       //delete cart product to user
-      app.delete("/api/delete/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { id: id };
-        const result = await cartCollection.deleteOne(query);
-        res.send(result);
-        console.log(id)
-      });
+    app.put("/api/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const changeProduct = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
 
+      const updateProduct = {
+        $set: {
+          productName: changeProduct.productName,
+          productImage: changeProduct.productImage,
+          brandName: changeProduct.brandName,
+          productType: changeProduct.productType,
+          productPrice: changeProduct.productPrice,
+          productRatting: changeProduct.productRatting,
+          productDescription: changeProduct.productDescription,
+        },
+      };
+      const result = await productCollection.updateOne(
+        filter,
+        updateProduct,
+        options
+      );
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
