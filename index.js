@@ -81,11 +81,22 @@ async function run() {
     });
 
   //sending cart product to user
-    app.get("/api/addCartItem", async (req, res) => {
+    app.get("/api/getCartItems", async (req, res) => {
       const cursor = cartCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+
+
+       //delete cart product to user
+      app.delete("/api/delete/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { id: id };
+        const result = await cartCollection.deleteOne(query);
+        res.send(result);
+        console.log(id)
+      });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
