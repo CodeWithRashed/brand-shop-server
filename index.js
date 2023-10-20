@@ -80,6 +80,13 @@ async function run() {
       res.send(result);
     });
 
+  //sending cart product to user
+    app.get("/api/addCartItem", async (req, res) => {
+      const cursor = cartCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
