@@ -40,6 +40,9 @@ async function run() {
     //Products Collection
     const productCollection = brandShopDB.collection("shopProducts");
 
+    //Cart Item Collections
+    const cartCollection = brandShopDB.collection("cartItems");
+
     app.post("/api/addUser", async (req, res) => {
       const data = req.body;
       console.log(data);
@@ -67,6 +70,13 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.findOne(query);
+      res.send(result);
+    });
+
+    //add cart items to database
+    app.post("/api/addCartItem", async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollection.insertOne(cartItem);
       res.send(result);
     });
 
