@@ -46,7 +46,6 @@ async function run() {
 
     app.post("/api/addUser", async (req, res) => {
       const data = req.body;
-      console.log(data);
       const result = await brandShopUserCollection.insertOne(data);
       res.send(result);
     });
@@ -54,7 +53,6 @@ async function run() {
     //Sending Product Data to Database
     app.post("/api/addProduct", async (req, res) => {
       const productData = req.body;
-      console.log(productData);
       const result = await productCollection.insertOne(productData);
       res.send(result);
     });
@@ -94,7 +92,6 @@ async function run() {
       const query = { id: id };
       const result = await cartCollection.deleteOne(query);
       res.send(result);
-      console.log(id);
     });
 
     app.put("/api/update/:id", async (req, res) => {
@@ -122,15 +119,11 @@ async function run() {
       res.send(result);
     });
 
-    // Send a ping to confirm a successful connection
-    
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
+ } finally {
+  ""
   }
 }
-run().catch(console.dir);
+run()
 
 app.get("/", (req, res) => {
   res.send("Hello From Express!");
